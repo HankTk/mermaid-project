@@ -1,0 +1,29 @@
+graph TD
+    A[クライアント] -->|HTTPリクエスト| B[Express Server]
+    B -->|SMBプロトコル| C[NAS Device]
+    
+    subgraph ExpressServer[Express Server]
+        B --> D[APIエンドポイント]
+        D --> E[SmbClient]
+    end
+    
+    subgraph APIEndpoints[APIエンドポイント]
+        D --> F[connect]
+        D --> G[files]
+        D --> H[files/:path]
+        D --> I[disconnect]
+    end
+    
+    subgraph SmbClientMethods[SmbClient]
+        E --> J[connect]
+        E --> K[listFiles]
+        E --> L[readFile]
+        E --> M[writeFile]
+        E --> N[disconnect]
+    end
+    
+    subgraph NASDevice[NAS Device]
+        C --> O[共有フォルダ]
+        O --> P[ファイル]
+        O --> Q[ディレクトリ]
+    end

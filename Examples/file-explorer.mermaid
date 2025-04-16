@@ -1,0 +1,143 @@
+classDiagram
+    class FileExplorerComponent {
+        -FileExplorerService fileExplorerService
+        -TranslationService translationService
+        -TranslateService translate
+        -ThemeService themeService
+        -FileItem[] items
+        -string currentPath
+        -boolean loading
+        -string error
+        -string searchQuery
+        -boolean isSearching
+        -FileItem viewingFile
+        -string fileContent
+        -boolean isDrawerOpen
+        -string currentLang
+        +ngOnInit()
+        +loadDirectory(path: string)
+        +goBack()
+        +goUp()
+        +goHome()
+        +onItemClick(item: FileItem)
+        +onSearch()
+        +closeViewer()
+        +canGoBack()
+        +canGoUp()
+        +navigateToPath(path: string)
+        +onSelectDirectory()
+        +toggleDrawer()
+        +switchLanguage(lang: string)
+    }
+
+    class FileExplorerService {
+        -ElectronAPI electron
+        -string[] hiddenFiles
+        +readDirectory(path: string)
+        +selectDirectory()
+        +openFile(path: string)
+        +getCurrentDirectory()
+        +getHomeDirectory()
+        +readFileContent(path: string)
+        +searchFiles(directory: string, query: string)
+        +getFileIcon(filename: string)
+        +formatFileSize(bytes: number)
+        +canGoBack()
+        +goBack()
+        +canGoUp(path: string)
+        +getParentDirectory(path: string)
+        +checkPathExists(path: string)
+        +isDirectory(path: string)
+        +openFileWithApp(path: string)
+    }
+
+    class FileItem {
+        +string name
+        +string path
+        +boolean isDirectory
+        +number size
+        +Date modifiedDate
+        +string type
+    }
+
+    class ElectronAPI {
+        <<interface>>
+        +readDirectory(path: string)
+        +selectDirectory()
+        +openFile(path: string)
+        +readFileContent(path: string)
+        +getCurrentDirectory()
+        +getHomeDirectory()
+        +searchFiles(directory: string, query: string)
+        +canGoBack()
+        +goBack()
+        +canGoUp(path: string)
+        +getParentDirectory(path: string)
+        +checkPathExists(path: string)
+        +isDirectory(path: string)
+        +openFileWithApp(path: string)
+    }
+
+    class TranslationService {
+        +translate(key: string)
+    }
+
+    class ThemeService {
+        -boolean isDarkMode
+        +darkMode$: Observable<boolean>
+        +isDarkMode(): boolean
+        +toggleTheme()
+        +applyTheme(isDark: boolean)
+    }
+
+    class FileViewComponent {
+        -FileItem[] items
+        -boolean loading
+        -string error
+        -boolean isSearching
+        -boolean isListView
+        +itemClick: EventEmitter<FileItem>
+    }
+
+    class FileToolbarComponent {
+        -string currentPath
+        -string searchQuery
+        -boolean canGoBack
+        -boolean canGoUp
+        -boolean isDrawerOpen
+        +goBack: EventEmitter<void>
+        +goUp: EventEmitter<void>
+        +goHome: EventEmitter<void>
+        +selectDirectory: EventEmitter<void>
+        +navigateToPath: EventEmitter<string>
+        +search: EventEmitter<void>
+        +toggleDrawer: EventEmitter<void>
+        +pathChange: EventEmitter<string>
+        +searchQueryChange: EventEmitter<string>
+    }
+
+    class ThemeSwitcherComponent {
+        -boolean isDarkMode
+        -Subscription subscription
+        +ngOnInit()
+        +ngOnDestroy()
+        +onThemeChange(event: any)
+    }
+
+    class AppComponent {
+        -ThemeService themeService
+        -TranslateService translate
+        -boolean isDarkMode
+        +ngOnInit()
+    }
+
+    FileExplorerComponent --> FileExplorerService
+    FileExplorerComponent --> TranslationService
+    FileExplorerComponent --> ThemeService
+    FileExplorerComponent --> FileViewComponent
+    FileExplorerComponent --> FileToolbarComponent
+    FileExplorerService --> ElectronAPI
+    FileExplorerService --> FileItem
+    AppComponent --> ThemeService
+    AppComponent --> FileExplorerComponent
+    ThemeSwitcherComponent --> ThemeService
